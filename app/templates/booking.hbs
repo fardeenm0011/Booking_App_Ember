@@ -1,0 +1,116 @@
+<div id="top"></div>
+
+{{!-- /.parallax full screen background image --}}
+<div class="fullscreen landing parallax" style="background-image:url('../assets/images/bg.jpg'); padding-bottom: 50px;"
+	data-img-width="2000" data-img-height="1333" data-diff="100">
+
+	<div class="overlay">
+		<div class="container">
+			<div class="row" style="text-align: right;">
+				<h1 class="wow fadeInUp">
+					BOOKINGS
+				</h1>
+				<p>There are several Acitivities</p>
+			</div>
+			<div class="row" style="display: flex;">
+				{{#each @model.activity as |activity|}}
+				<div class="col-6" id={{activity.id}}>
+					<div class="card">
+						<div class="card-body booking-card-body">
+							<h3 class="card-title">{{activity.name}}</h3>
+							<p class="card-text booking-card-text">{{activity.description}}</p>
+							<form>
+								<div class="row">
+									<div class="col" style="margin-left: -57px;">
+										<label for="ticket" name="ticket" class="form-label">Tickets:</label>
+										<select class="select-ticket" onchange={{action "ticketSelected" activity.id }}>
+											{{#each activity.tickets as |ticket|}}
+											<option value="{{ticket.id}}">{{ticket.id}}</option>
+											{{/each}}
+										</select>
+									</div>
+
+									<div class="col" key={{activity.id}}>
+										{{#if (eq this.ticketDetails activity.id)}}
+										<label for="amount" name="amount" class="form-label">Amount:
+											<span>{{this.amount}}</span></label>
+										<label for="currency" name="currency" class="form-label">Currency:
+											<span>{{this.currency}}</span></label>
+										<label for="formatted" name="formatted" class="form-label">Formatted:
+											<span>{{this.formatted}}</span></label>
+										{{/if}}
+									</div>
+
+								</div>
+								<div class="row">
+									<div class="col" style="margin-left: -42px;">
+										<label for="date" name="date" class="form-label" style="margin-top: 10px;">Date:
+										</label>
+										<input type="date" class="datepicker" onchange={{action "dateSelected"
+											activity.id}}>
+									</div>
+									{{#if (eq this.timeshow activity.id)}}
+									<div class="col" style="margin-left: -42px;">
+										<label for="time" name="time" class="form-label">Time:</label>
+										<select class="select-ticket" onchange={{action "timeSelected" }}>
+											{{#each this.times as |time|}}
+											<option value={{time}}>{{time}}</option>
+											{{/each}}
+										</select>
+									</div>
+									{{/if}}
+								</div>
+								<div class="row"></div>
+								<div class="row">
+									<div class="col">
+										<button type="button" class="btn btn-primary btn-modal-toggle"
+											data-toggle="modal" data-target="#BookingModal" {{on "click"
+											this.OpenModal}}>
+											Booking
+										</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				{{/each}}
+			</div>
+
+		</div>
+	</div>
+</div>
+
+{{!-- modal --}}
+{{#if this.showModal}}
+<div class="modal fade" id="BookingModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title alter-success">Confirm Booking Information</h4>
+			</div>
+			<div class="modal-body">
+				<p>UserName: {{this.selectedModalName}}</p>
+				<p>Email: {{this.selectedModalEmail}}</p>
+				<p>Phone: {{this.selectedModalPhone}}</p>
+				<p>Ticket: {{this.selectedModalTicket.name}}</p>
+				<p>Currency: {{this.selectedModalCurrency}}</p>
+				<p>Time: {{this.selectedModalTime}}</p>
+				<p>Date: {{this.selectedModalDate}}</p>
+			</div>
+			<div class="modal-footer">
+
+				<button type="button" class="btn btn-danger" data-dismiss="modal" {{action "cancelModal"
+					}}>Cancel</button>
+				<button type="submit" class="btn btn-success" {{on "click" this.confirmBooking}}>Confirm</button>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+{{/if}}
+
+<script>
+	new WOW().init();
+</script>
